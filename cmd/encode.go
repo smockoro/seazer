@@ -20,6 +20,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var shiftNum int32
+
 // encodeCmd represents the encode command
 var encodeCmd = &cobra.Command{
 	Use:   "encode",
@@ -33,7 +35,20 @@ to quickly create a Cobra application.`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("encode called")
-
+		fmt.Println(shiftNum)
+		for _, str := range args {
+			for _, c := range str {
+				// c is int32 or rune type
+				switch {
+				case 'A' <= c && c <= 'Z':
+					fmt.Printf(string((c-'A'+shiftNum)%26 + 'A'))
+				case 'a' <= c && c <= 'z':
+					fmt.Printf(string((c-'a'+shiftNum)%26 + 'a'))
+				default:
+					fmt.Printf(string(c))
+				}
+			}
+		}
 	},
 }
 
@@ -49,4 +64,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// encodeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	encodeCmd.Flags().Int32VarP(&shiftNum, "shift", "s", 1, "shift numbers")
 }
