@@ -32,7 +32,22 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Args: cobra.RangeArgs(1, 1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("decode called")
+		word := args[0]
+		for shiftNum := int32(0); shiftNum < 26; shiftNum++ {
+			fmt.Printf("%s => ", word)
+			for _, c := range word {
+				// c is int32 or rune type
+				switch {
+				case 'A' <= c && c <= 'Z':
+					fmt.Printf(string((c-'A'+shiftNum)%26 + 'A'))
+				case 'a' <= c && c <= 'z':
+					fmt.Printf(string((c-'a'+shiftNum)%26 + 'a'))
+				default:
+					fmt.Printf(string(c))
+				}
+			}
+			fmt.Printf(" ( %d shift )\n", shiftNum)
+		}
 	},
 }
 
@@ -48,4 +63,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// decodeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// decodeCmd.Flags().Int32VarP(&shiftNum, "shift", "s", 0, "shift numbers")
 }
